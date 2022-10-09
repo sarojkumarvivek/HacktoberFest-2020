@@ -1,4 +1,4 @@
-# HacktoberFest-2020
+# HacktoberFest-2022
 Repository designed for beginner to contribute to open-source 
 
 https://hacktoberfest.digitalocean.com/
