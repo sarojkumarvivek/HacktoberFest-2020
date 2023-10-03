@@ -1,0 +1,12 @@
+# Input current salary
+current_salary = float(input("Enter the current salary: "))
+
+# Input percentage of hike
+percentage_hike = float(input("Enter the percentage hike (e.g., 10 for 10%): "))
+
+# Calculate the new salary
+hike_amount = (percentage_hike / 100) * current_salary
+new_salary = current_salary + hike_amount
+
+# Print the new salary
+print(f"The new salary after a {percentage_hike}% hike is: ${new_salary:.2f}")
