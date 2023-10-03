@@ -1,18 +1,20 @@
+import random
+
 def print_board(board):
     for row in board:
         print(" | ".join(row))
-        print("-" * 9)
+        print("-" * (len(row) * 4 - 1))
 
 def check_win(board, player):
     for row in board:
         if all(cell == player for cell in row):
             return True
 
-    for col in range(3):
-        if all(board[row][col] == player for row in range(3)):
+    for col in range(len(board[0])):
+        if all(board[row][col] == player for row in range(len(board))):
             return True
 
-    if all(board[i][i] == player for i in range(3)) or all(board[i][2 - i] == player for i in range(3)):
+    if all(board[i][i] == player for i in range(len(board))) or all(board[i][len(board) - 1 - i] == player for i in range(len(board))):
         return True
 
     return False
@@ -20,26 +22,43 @@ def check_win(board, player):
 def is_full(board):
     return all(cell != " " for row in board for cell in row)
 
-def play_game():
-    board = [[" " for _ in range(3)] for _ in range(3)]
-    current_player = "X"
+def get_player_move(board, player):
+    while True:
+        try:
+            row = int(input(f"{player}, choose row (0-{len(board) - 1}): "))
+            col = int(input(f"{player}, choose column (0-{len(board) - 1}): "))
 
+            if 0 <= row < len(board) and 0 <= col < len(board[0]) and board[row][col] == " ":
+                return row, col
+            else:
+                print("Invalid move. Try again.")
+        except ValueError:
+            print("Invalid input. Enter a valid number.")
+
+def play_game():
     print("Welcome to Tic Tac Toe!")
+    player1 = input("Enter Player 1's name: ")
+    player2 = input("Enter Player 2's name: ")
+
+    while True:
+        board_size = int(input("Enter board size (e.g., 3 for a 3x3 board): "))
+        if board_size >= 3:
+            break
+        else:
+            print("Board size must be at least 3x3.")
+
+    board = [[" " for _ in range(board_size)] for _ in range(board_size)]
+    current_player = player1
+    players = [player1, player2]
 
     while True:
         print_board(board)
-        row = int(input(f"Player {current_player}, choose row (0, 1, 2): "))
-        col = int(input(f"Player {current_player}, choose column (0, 1, 2): "))
+        row, col = get_player_move(board, current_player)
+        board[row][col] = "X" if current_player == player1 else "O"
 
-        if board[row][col] == " ":
-            board[row][col] = current_player
-        else:
-            print("That position is already taken. Try again.")
-            continue
-
-        if check_win(board, current_player):
+        if check_win(board, "X" if current_player == player1 else "O"):
             print_board(board)
-            print(f"Player {current_player} wins!")
+            print(f"{current_player} wins!")
             break
 
         if is_full(board):
@@ -47,7 +66,13 @@ def play_game():
             print("It's a draw!")
             break
 
-        current_player = "O" if current_player == "X" else "X"
+        current_player = player2 if current_player == player1 else player1
+
+    play_again = input("Play again? (yes/no): ")
+    if play_again.lower() == "yes":
+        play_game()
+    else:
+        print("Thanks for playing!")
 
 if __name__ == "__main__":
     play_game()
